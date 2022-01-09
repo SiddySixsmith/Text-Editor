@@ -22,9 +22,7 @@ module.exports = () => {
         template: "./index.html",
         title: "JATE",
       }),
-
       new WebpackPwaManifest({
-        filename: "manifest.json",
         fingerprints: false,
         inject: true,
         name: "JATE",
@@ -39,11 +37,11 @@ module.exports = () => {
             sizes: [96, 128, 192, 256, 384, 512],
             destination: path.join("assets", "icons"),
           },
-          new InjectManifest({
-            swSrc: "./src-sw.js",
-            swDest: "src-sw.js",
-          }),
         ],
+      }),
+      new InjectManifest({
+        swSrc: "./src-sw.js",
+        swDest: "src-sw.js",
       }),
     ],
 
@@ -54,9 +52,12 @@ module.exports = () => {
           use: ["style-loader", "css-loader"],
         },
         {
+          test: /\.(png|svg|jpg|jpeg|gif)$/i,
+          type: "asset/resource",
+        },
+        {
           test: /\.m?js$/,
           exclude: /node_modules/,
-          // We use babel-loader in order to use ES6.
           use: {
             loader: "babel-loader",
             options: {
